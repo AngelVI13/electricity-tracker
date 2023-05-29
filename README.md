@@ -20,3 +20,5 @@ to evaluate the html+js and that will calculate the displayed values.
 store the data for the day and only run it once per day)
 
 [How to set up a cron job](https://phoenixnap.com/kb/set-up-cron-job-linux)
+
+NOTE: Tested with python 3.8 (should work with any python between 3.7 and 3.9)
