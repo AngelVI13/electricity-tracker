@@ -1,28 +1,20 @@
-import time
+import requests
 from datetime import datetime
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
+from bs4 import BeautifulSoup
 
-URL = "https://ibex.bg/данни-за-пазара/пазарен-сегмент-в-рамките-на-деня/idm-prices-volumes-with-qh-2/"
-LIMIT = 75.0
+LIMIT = 0.0
+
+DATA_URL = "https://ibex.bg/dev/ID24/data_bg.php"
 
 
 def main():
-    # if you dont want the browser to open on every run, set "headless" option to the driver
-    # options = Options()
-    # options.add_argument("--headless")
-    # driver = webdriver.Firefox(options=options)
+    user_agent = {'User-agent': 'Mozilla/5.0'}
+    resp = requests.get(DATA_URL, headers=user_agent)
 
-    driver = webdriver.Firefox()
-    driver.get(URL)
+    soup = BeautifulSoup(resp.text, "html.parser")
+    div = soup.find(attrs={"class": "idm-table"})
 
-    # NOTE: have to wait some time until all data in the table is populated
-    # `WebDriverWait` is not sufficient
-    time.sleep(5)  # seconds
-
-    table = driver.find_element(By.CLASS_NAME, "idm-table")
-    elems = table.find_elements(By.CLASS_NAME, "column-avg")
+    elems = div.find_all(attrs={"class": "column-avg"})
 
     if len(elems) != 24:
         raise Exception(
@@ -51,8 +43,6 @@ def main():
     else:
         # PUT LOGIC HERE
         print("TODO")
-
-    driver.close()
 
 
 if __name__ == "__main__":
